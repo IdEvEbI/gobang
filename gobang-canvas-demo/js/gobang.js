@@ -1,1 +1,3 @@
-console.log('Hello gobang.')
+import utils from './utils.js'
+
+utils.board.drawBoard()
