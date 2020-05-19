@@ -1,3 +1,4 @@
 import utils from './utils.js'
 
-utils.board.drawBoard()
+let board = new utils.Board('gobang')
+board.drawBoard()

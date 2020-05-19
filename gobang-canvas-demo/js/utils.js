@@ -3,6 +3,8 @@
  */
 class Board {
   constructor(canvasId) {
+    console.assert(canvasId, 'canvase id is null.')
+
     this.count = 15                                   // 棋盘格子数
     this.canvas = document.getElementById(canvasId)   // 棋盘画布
     this.width = this.canvas.clientWidth              // 棋盘宽度
@@ -79,9 +81,16 @@ class Board {
   drawBoard() {
     let ctx = this.canvas.getContext('2d')
 
-    this.drawBoardLines(ctx)
-    this.drawMarkPoints(ctx)
+    // 绘制棋盘背景图片
+    let img = new Image()
+    img.src = '/images/bg.jpg'
+    img.onload = () => {
+      ctx.drawImage(img, 0, 0, this.width, this.height)
+
+      this.drawBoardLines(ctx)
+      this.drawMarkPoints(ctx)
+    }
   }
 }
 
-export default { board: new Board('gobang') }
+export default { Board: Board }
