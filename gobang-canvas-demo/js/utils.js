@@ -17,6 +17,9 @@ class Board {
 
     this.strokeColor = '#ccc'                         // 棋盘线条颜色
     this.fillColor = '#333'                           // 棋盘标注点填充颜色
+
+    this.chessSize = Math.floor(this.cellWidth * 0.5 - 2)   // 棋子大小
+    this.dada = new gobangData()                      // 游戏数据
   }
 
   /**
@@ -90,6 +93,65 @@ class Board {
       this.drawBoardLines(ctx)
       this.drawMarkPoints(ctx)
     }
+  }
+
+  /**
+   * 在 canvas 偏移位置绘制棋子
+   *
+   * @param {*} offsetX
+   * @param {*} offsetY
+   */
+  drawChessAtOffset(offsetX, offsetY) {
+
+    let x = Math.floor(offsetX / this.cellWidth)
+    let y = Math.floor(offsetY / this.cellHeight)
+
+    this.drawChess(x, y)
+  }
+
+  /**
+   * 在棋盘坐标位置绘制棋子
+   *
+   * @param {*} x
+   * @param {*} y
+   */
+  drawChess(x, y) {
+    let ctx = this.canvas.getContext('2d')
+
+    let p = this.point(x, y)
+
+    let grd = ctx.createRadialGradient(p.x + 2, p.y - 2, this.chessSize,
+      p.x + 2, p.y - 2, 0);
+
+    if (this.dada.isBlack) {
+      grd.addColorStop(0, '#111')
+      grd.addColorStop(1, '#666')
+    } else {
+      grd.addColorStop(0, '#ccc')
+      grd.addColorStop(1, '#eee')
+    }
+
+    ctx.fillStyle = grd
+
+    ctx.beginPath()
+    ctx.arc(p.x, p.y, this.chessSize, 0, 2 * Math.PI)
+    ctx.fill()
+  }
+}
+
+/**
+ * 游戏数据类
+ */
+class gobangData {
+  constructor() {
+    this.isBlack = true                               // 是否黑棋
+  }
+
+  /**
+   * 交换玩家
+   */
+  switchPlayer() {
+    this.isBlack = !this.isBlack
   }
 }
 
