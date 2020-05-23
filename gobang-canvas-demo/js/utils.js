@@ -271,12 +271,19 @@ class gobangData {
 
         // 判断当前玩家的胜负
         if (current[i] === 5) {
-          console.log(`${this.isBlack ? '黑棋' : '白棋'} 胜利。`)
+          console.log(`${this.isBlack ? '黑棋' : '白棋'}胜利。`)
 
           this.isGameOver = true
         }
       }
     }
+  }
+
+  /**
+   * 返回合适的落子坐标
+   */
+  findAICoor() {
+    return { x: 0, y: 1 }
   }
 }
 

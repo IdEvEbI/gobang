@@ -7,16 +7,27 @@ function clickBoard(e) {
     return
   }
 
-  let coor = board.boardCoordinate(e.offsetX, e.offsetY)
+  dropStone(board.boardCoordinate(e.offsetX, e.offsetY))
+}
 
+/**
+ * 在指定坐标位置落子
+ *
+ * @param {落子坐标} coor
+ */
+function dropStone(coor) {
   if (board.dada.hadStone(coor)) {
-    console.log('此处已经有棋子，无法落子');
+    console.log('此处已经有棋子，无法落子')
     return
   }
 
   board.drawChess(coor)
   board.dada.dropStone(coor)
   board.dada.switchPlayer()
+
+  if (!board.dada.isBlack) {
+    dropStone(board.dada.findAICoor())
+  }
 
   console.log(board.dada)
 }
