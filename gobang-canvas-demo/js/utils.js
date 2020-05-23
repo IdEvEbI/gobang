@@ -143,15 +143,16 @@ class Board {
 class gobangData {
 
   constructor(count) {
-    this.count = count                                // 棋盘格子数
-    this.isBlack = true                               // 是否黑棋
-    this.wins = []                                    // 赢法数组
+    this.count = count                                    // 棋盘格子数
+    this.isBlack = true                                   // 是否黑棋
 
-    this.initWinsData()
-    console.log('赢法数组')
-    console.log(this.wins)
+    this.wins = []                                        // 赢法数组
+    this.initWins()                                       // 初始化赢法数组
 
-    this.gameData = []                                // 游戏数据二维数组
+    this.blackWins = new Array(this.wins.length).fill(0)  // 黑棋胜利统计数组
+    this.whiteWins = new Array(this.wins.length).fill(0)  // 白棋胜利统计数组
+
+    this.gameData = []                                    // 游戏数据二维数组
 
     // 初始化棋盘数组
     for (let i = 0; i < this.count; i++) {
@@ -164,56 +165,60 @@ class gobangData {
   /**
    * 初始化赢法数组
    */
-  initWinsData() {
+  initWins() {
 
-    let count = 0
-
-    // 1. 纵向赢法数组
-    for (let x = 0; x < this.count; x++) {
-      for (let y = 0; y < this.count - 4; y++) {
-        this.wins[count] = []
-        for (let k = 0; k < 5; k++) {
-          this.wins[count][k] = { x: x, y: y + k }
-        }
-        count++
+    // 初始化赢法三维数组
+    for (let y = 0; y < this.count; y++) {
+      this.wins[y] = []
+      for (let x = 0; x < this.count; x++) {
+        this.wins[y][x] = []
       }
     }
 
-    // 2. 横向赢法数组
+    // 赢法计数
+    let num = 0
+
+    // 1. 横向赢法
     for (let y = 0; y < this.count; y++) {
       for (let x = 0; x < this.count - 4; x++) {
-        this.wins[count] = []
         for (let k = 0; k < 5; k++) {
-          this.wins[count][k] = { x: x + k, y: y }
+          this.wins[y][x + k][num] = true
         }
-        count++
+        num++
       }
     }
 
-    // 3. 反斜线赢法数组
-    for (let x = 0; x < this.count - 4; x++) {
+    // 2. 纵向赢法
+    for (let x = 0; x < this.count; x++) {
       for (let y = 0; y < this.count - 4; y++) {
-        this.wins[count] = []
         for (let k = 0; k < 5; k++) {
-          this.wins[count][k] = { x: x + k, y: y + k }
+          this.wins[y + k][x][num] = true
         }
-        count++
+        num++
       }
     }
 
-    // 4. 斜线赢法数组
-    for (let x = this.count - 1; x > 3; x--) {
-      for (let y = 0; y < this.count - 4; y++) {
-
-        this.wins[count] = []
+    // 3. 反斜线赢法
+    for (let y = 0; y < this.count - 4; y++) {
+      for (let x = 0; x < this.count - 4; x++) {
         for (let k = 0; k < 5; k++) {
-          this.wins[count][k] = { x: x - k, y: y + k }
+          this.wins[y + k][x + k][num] = true
         }
-        count++
+        num++
       }
     }
-    console.log(count)
 
+    // 4. 斜线赢法
+    for (let y = 0; y < this.count - 4; y++) {
+      for (let x = this.count - 1; x > 3; x--) {
+        for (let k = 0; k < 5; k++) {
+          this.wins[y + k][x - k][num] = true
+        }
+        num++
+      }
+    }
+
+    console.log(`赢法总数：${num}。`)
   }
 
   /**
@@ -230,6 +235,9 @@ class gobangData {
     for (let i = 0; i < this.count; i++) {
       this.gameData[i].fill(0)
     }
+
+    this.blackWins.fill(0)
+    this.whiteWins.fill(0)
   }
 
   /**
@@ -248,6 +256,8 @@ class gobangData {
    */
   dropStone(coor) {
     this.gameData[coor.y][coor.x] = this.isBlack ? 1 : 2
+
+
   }
 }
 
