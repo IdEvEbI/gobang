@@ -145,12 +145,15 @@ class gobangData {
   constructor(count) {
     this.count = count                                    // 棋盘格子数
     this.isBlack = true                                   // 是否黑棋
+    this.isGameOver = false                               // 游戏结束标记
 
     this.wins = []                                        // 赢法数组
-    this.initWins()                                       // 初始化赢法数组
+    this.winsCount = this.initWins()                      // 初始化赢法，并返回赢法总数
 
-    this.blackWins = new Array(this.wins.length).fill(0)  // 黑棋胜利统计数组
-    this.whiteWins = new Array(this.wins.length).fill(0)  // 白棋胜利统计数组
+    console.log(`[gobang]: 赢法数组初始化完毕，共有 ${this.winsCount} 种赢法。`)
+
+    this.blackWins = new Array(this.winsCount).fill(0)    // 黑棋胜利统计数组
+    this.whiteWins = new Array(this.winsCount).fill(0)    // 白棋胜利统计数组
 
     this.gameData = []                                    // 游戏数据二维数组
 
@@ -218,7 +221,7 @@ class gobangData {
       }
     }
 
-    console.log(`赢法总数：${num}。`)
+    return num
   }
 
   /**
@@ -257,7 +260,23 @@ class gobangData {
   dropStone(coor) {
     this.gameData[coor.y][coor.x] = this.isBlack ? 1 : 2
 
+    // 遍历所有的赢法
+    let current = this.isBlack ? this.blackWins : this.whiteWins
+    let opponent = this.isBlack ? this.whiteWins : this.blackWins
 
+    for (let i = 0; i < this.winsCount; i++) {
+      if (this.wins[coor.y][coor.x][i]) {
+        current[i]++
+        opponent[i] = -1;
+
+        // 判断当前玩家的胜负
+        if (current[i] === 5) {
+          console.log(`${this.isBlack ? '黑棋' : '白棋'} 胜利。`)
+
+          this.isGameOver = true
+        }
+      }
+    }
   }
 }
 

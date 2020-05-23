@@ -2,6 +2,11 @@ import Board from './utils.js'
 
 function clickBoard(e) {
 
+  if (board.dada.isGameOver) {
+    console.log('游戏已经结束。')
+    return
+  }
+
   let coor = board.boardCoordinate(e.offsetX, e.offsetY)
 
   if (board.dada.hadStone(coor)) {
