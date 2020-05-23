@@ -19,7 +19,7 @@ class Board {
     this.fillColor = '#333'                           // 棋盘标注点填充颜色
 
     this.chessSize = Math.floor(this.cellWidth * 0.5 - 2)   // 棋子大小
-    this.dada = new gobangData()                      // 游戏数据
+    this.dada = new gobangData(this.count)                      // 游戏数据
   }
 
   /**
@@ -32,6 +32,19 @@ class Board {
     return {
       x: this.startX + x * this.cellWidth,
       y: this.startY + y * this.cellHeight
+    }
+  }
+
+  /**
+   * 将画布坐标转换成棋盘做坐标
+   *
+   * @param {*} offsetX
+   * @param {*} offsetY
+   */
+  boardCoordinate(offsetX, offsetY) {
+    return {
+      x: Math.floor(offsetX / this.cellWidth),
+      y: Math.floor(offsetY / this.cellHeight)
     }
   }
 
@@ -96,29 +109,14 @@ class Board {
   }
 
   /**
-   * 在 canvas 偏移位置绘制棋子
-   *
-   * @param {*} offsetX
-   * @param {*} offsetY
-   */
-  drawChessAtOffset(offsetX, offsetY) {
-
-    let x = Math.floor(offsetX / this.cellWidth)
-    let y = Math.floor(offsetY / this.cellHeight)
-
-    this.drawChess(x, y)
-  }
-
-  /**
    * 在棋盘坐标位置绘制棋子
    *
-   * @param {*} x
-   * @param {*} y
+   * @param {落子的棋盘坐标} coor
    */
-  drawChess(x, y) {
+  drawChess(coor) {
     let ctx = this.canvas.getContext('2d')
 
-    let p = this.point(x, y)
+    let p = this.point(coor.x, coor.y)
 
     let grd = ctx.createRadialGradient(p.x + 2, p.y - 2, this.chessSize,
       p.x + 2, p.y - 2, 0);
@@ -143,8 +141,18 @@ class Board {
  * 游戏数据类
  */
 class gobangData {
-  constructor() {
+
+  constructor(count) {
+    this.count = count                                // 棋盘格子数
     this.isBlack = true                               // 是否黑棋
+    this.gameData = []                                // 游戏数据二维数组
+
+    // 初始化棋盘数组
+    for (let i = 0; i < this.count; i++) {
+      this.gameData[i] = new Array(this.count).fill(0)
+    }
+
+    this.resetData()
   }
 
   /**
@@ -153,6 +161,33 @@ class gobangData {
   switchPlayer() {
     this.isBlack = !this.isBlack
   }
+
+  /**
+   * 重置游戏数据
+   */
+  resetData() {
+    for (let i = 0; i < this.count; i++) {
+      this.gameData[i].fill(0)
+    }
+  }
+
+  /**
+   * 判断指定坐标位置是否已经落子
+   *
+   * @param {坐标位置 {x, y}} coor
+   */
+  hadStone(coor) {
+    return this.gameData[coor.y][coor.x]
+  }
+
+  /**
+   * 在指定坐标位置落子
+   *
+   * @param {坐标位置 {x, y}} coor
+   */
+  dropStone(coor) {
+    this.gameData[coor.y][coor.x] = this.isBlack ? 1 : 2
+  }
 }
 
-export default { Board: Board }
+export default Board
