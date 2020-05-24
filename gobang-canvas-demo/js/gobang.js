@@ -16,6 +16,7 @@ function clickBoard(e) {
  * @param {落子坐标} coor
  */
 function dropStone(coor) {
+
   if (board.dada.hadStone(coor)) {
     console.log('此处已经有棋子，无法落子')
     return
@@ -23,6 +24,13 @@ function dropStone(coor) {
 
   board.drawChess(coor)
   board.dada.dropStone(coor)
+
+  if (board.dada.isGameOver) {
+    console.log('游戏结束')
+
+    return
+  }
+
   board.dada.switchPlayer()
 
   if (!board.dada.isBlack) {

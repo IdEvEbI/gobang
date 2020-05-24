@@ -341,11 +341,38 @@ class gobangData {
         }
       }
     }
-    console.log(`对手分数数据`, opponentScore)
-    console.log(`本方分数数据`, currentScore)
-    console.log(`最大值得分是 ${max}。`)
 
-    return { x: 0, y: 1 }
+    console.assert(max > 0, '出错了。')
+
+    let coors = this.findMaxCoors(opponentScore, currentScore, max)
+    let r = Math.floor(Math.random() * (coors.length));
+    console.log(`返回第 ${r} 个位置：${coors[r]} (${coors.length})`)
+    return coors[r]
+  }
+
+  /**
+   * 查找最大值的坐标数组
+   *
+   * @param {对手分数数组} opponentScore
+   * @param {本方分数数组} currentScore
+   * @param {最大值} max
+   */
+  findMaxCoors(opponentScore, currentScore, max) {
+    let coors = []
+
+    // 遍历棋盘
+    for (let y = 0; y < this.count; y++) {
+      for (let x = 0; x < this.count; x++) {
+        if (opponentScore[y][x] === max) {
+          coors.push({ x: x, y: y })
+        }
+        if (currentScore[y][x] === max) {
+          coors.push({ x: x, y: y })
+        }
+      }
+    }
+
+    return coors
   }
 }
 
