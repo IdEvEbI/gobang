@@ -119,7 +119,7 @@ class Board {
     let p = this.point(coor.x, coor.y)
 
     let grd = ctx.createRadialGradient(p.x + 2, p.y - 2, this.chessSize,
-      p.x + 2, p.y - 2, 0);
+      p.x + 2, p.y - 2, 0)
 
     if (this.dada.isBlack) {
       grd.addColorStop(0, '#111')
@@ -267,7 +267,7 @@ class gobangData {
     for (let i = 0; i < this.winsCount; i++) {
       if (this.wins[coor.y][coor.x][i]) {
         current[i]++
-        opponent[i] = -1;
+        opponent[i] = -1
 
         // 判断当前玩家的胜负
         if (current[i] === 5) {
@@ -298,6 +298,8 @@ class gobangData {
       opponentScore[y] = new Array(this.count).fill(0)
     }
 
+    let max = 0
+
     // 3. 遍历棋盘
     for (let y = 0; y < this.count; y++) {
       for (let x = 0; x < this.count; x++) {
@@ -308,31 +310,40 @@ class gobangData {
             if (this.wins[y][x][k]) {
               // 计算对手分数
               if (opponentWins[k] === 1) {
-                opponentScore[y][x] += 200;
+                opponentScore[y][x] += 200
               } else if (opponentWins[k] === 2) {
-                opponentScore[y][x] += 400;
+                opponentScore[y][x] += 400
               } else if (opponentWins[k] === 3) {
-                opponentScore[y][x] += 2000;
+                opponentScore[y][x] += 2000
               } else if (opponentWins[k] === 4) {
-                opponentScore[y][x] += 10000;
+                opponentScore[y][x] += 10000
               }
               // 计算本方分数
               if (currentWins[k] === 1) {
-                currentScore[y][x] += 220;
+                currentScore[y][x] += 220
               } else if (currentWins[k] === 2) {
-                currentScore[y][x] += 420;
+                currentScore[y][x] += 420
               } else if (currentWins[k] === 3) {
-                currentScore[y][x] += 2400;
+                currentScore[y][x] += 2400
               } else if (currentWins[k] === 4) {
-                currentScore[y][x] += 20000;
+                currentScore[y][x] += 20000
               }
             }
+          }
+
+          // 记录最大值
+          if (opponentScore[y][x] > max) {
+            max = opponentScore[y][x]
+          }
+          if (currentScore[y][x] > max) {
+            max = currentScore[y][x]
           }
         }
       }
     }
     console.log(`对手分数数据`, opponentScore)
     console.log(`本方分数数据`, currentScore)
+    console.log(`最大值得分是 ${max}。`)
 
     return { x: 0, y: 1 }
   }
