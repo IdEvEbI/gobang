@@ -35,6 +35,4 @@ function dropStone(coor) {
 let board = new Board('gobang')
 board.drawBoard()
 
-console.log(board.dada.gameData)
-
 board.canvas.addEventListener('click', clickBoard)

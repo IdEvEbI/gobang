@@ -283,6 +283,57 @@ class gobangData {
    * 返回合适的落子坐标
    */
   findAICoor() {
+    console.log(`${this.isBlack ? '黑棋' : '白棋'} 的 AI 正在思考落子位置……。`)
+
+    // 1. 获得赢法数组
+    let currentWins = this.isBlack ? this.blackWins : this.whiteWins
+    let opponentWins = this.isBlack ? this.whiteWins : this.blackWins
+
+    // 2. 初始化得分数组
+    let currentScore = []
+    let opponentScore = []
+
+    for (let y = 0; y < this.count; y++) {
+      currentScore[y] = new Array(this.count).fill(0)
+      opponentScore[y] = new Array(this.count).fill(0)
+    }
+
+    // 3. 遍历棋盘
+    for (let y = 0; y < this.count; y++) {
+      for (let x = 0; x < this.count; x++) {
+        // 4. 如果该位置还没有落子，则计算该位置的分值权重
+        if (this.gameData[y][x] === 0) {
+          // 遍历所有的赢法数组
+          for (let k = 0; k < this.winsCount; k++) {
+            if (this.wins[y][x][k]) {
+              // 计算对手分数
+              if (opponentWins[k] === 1) {
+                opponentScore[y][x] += 200;
+              } else if (opponentWins[k] === 2) {
+                opponentScore[y][x] += 400;
+              } else if (opponentWins[k] === 3) {
+                opponentScore[y][x] += 2000;
+              } else if (opponentWins[k] === 4) {
+                opponentScore[y][x] += 10000;
+              }
+              // 计算本方分数
+              if (currentWins[k] === 1) {
+                currentScore[y][x] += 220;
+              } else if (currentWins[k] === 2) {
+                currentScore[y][x] += 420;
+              } else if (currentWins[k] === 3) {
+                currentScore[y][x] += 2400;
+              } else if (currentWins[k] === 4) {
+                currentScore[y][x] += 20000;
+              }
+            }
+          }
+        }
+      }
+    }
+    console.log(`对手分数数据`, opponentScore)
+    console.log(`本方分数数据`, currentScore)
+
     return { x: 0, y: 1 }
   }
 }
